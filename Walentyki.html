@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dla mojej Walentynki ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- STYLE CSS --- */
+        :root {
+            --primary-color: #ff4d6d;
+            --bg-color: #fff0f3;
+            --text-color: #590d22;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            overflow-x: hidden;
+        }
+
+        /* Pływające serca w tle */
+        .heart-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.1;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ff4d6d"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>');
+            background-size: 50px;
+        }
+
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(255, 77, 109, 0.2);
+            max-width: 600px;
+            width: 90%;
+            margin: 20px;
+            animation: fadeIn 1.5s ease;
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.5rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Galeria zdjęć (placeholder) */
+        .photo-frame {
+            width: 100%;
+            height: 300px;
+            background-color: #ffccd5;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            overflow: hidden;
+            border: 4px solid var(--primary-color);
+        }
+        
+        .photo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Przycisk interaktywny */
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.3s;
+            box-shadow: 0 5px 15px rgba(255, 77, 109, 0.4);
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            background-color: #d90429;
+        }
+
+        .hidden-message {
+            display: none;
+            margin-top: 20px;
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 1.3rem;
+        }
+
+        /* Animacja wejścia */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Animacja bijącego serca */
+        .heart-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            animation: beat 1s infinite alternate;
+        }
+
+        @keyframes beat {
+            to { transform: scale(1.1); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="heart-bg"></div>
+
+    <div class="container">
+        <div class="heart-icon">❤️</div>
+        <h1>Dla Ciebie, Magda!</h1>
+        
+        <p>
+            Wiem, że w prezenty dobry nie jestem ale chociaż tradycje utrzymam.
+            Dziękuję, że jesteś przy mnie. Każdy dzień z Tobą to najlepszy prezent.
+        </p>
+
+        <div class="photo-frame">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKhkkj_KHqL5k50MR3T1EXlV6C5RNrh928Ow&s" alt="kotek">
+        </div>
+
+        <p>Mam do Ciebie ważne pytanie...</p>
+        <button class="btn" onclick="revealMessage()">Kliknij mnie!</button>
+        
+        <div id="secret" class="hidden-message">
+            Zostaniesz moją Walentynką? 🌹<br>
+            (Wiem, że już jesteś, ale chciałem zapytać oficjalnie!)
+
+            <button class="btn" onclick="window.location='info.html'">Więcej ważnych informacji!</button>
+        </div>
+    </div>
+
+    <script>
+        
+        function createConfetti() {
+            for(let i=0; i<30; i++) {
+                const heart = document.createElement('div');
+                heart.innerText = '❤️';
+                heart.style.position = 'fixed';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.top = '-50px';
+                heart.style.fontSize = '20px';
+                heart.style.animation = `fadeIn 3s linear forwards`;
+                heart.style.animationDuration = Math.random() * 2 + 3 + 's';
+                document.body.appendChild(heart);
+            }
+        }
+
+
+        function revealMessage() {
+            const secret = document.getElementById('secret');
+            const btn = document.querySelector('.btn');
+            
+            secret.style.display = 'block';
+            btn.style.display = 'none';
+            
+            createConfetti();
+        }
+    </script>
+</body>
+</html>

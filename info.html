@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dla mojej Walentynki ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- STYLE CSS --- */
+        :root {
+            --primary-color: #ff4d6d;
+            --bg-color: #fff0f3;
+            --text-color: #590d22;
+            --notebook-bg: #fff;
+            --tab-active: #ff4d6d;
+            --tab-inactive: #ffccd5;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            overflow-x: hidden;
+        }
+
+        /* Pływające serca w tle */
+        .heart-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.1;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ff4d6d"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>');
+            background-size: 50px;
+        }
+
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(255, 77, 109, 0.2);
+            max-width: 600px;
+            width: 90%;
+            margin: 20px;
+            animation: fadeIn 1.5s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.5rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        /* --- STYL LICZNIKA --- */
+        .timer-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .time-box {
+            background-color: var(--bg-color);
+            padding: 10px;
+            border-radius: 10px;
+            min-width: 70px;
+            border: 2px solid var(--primary-color);
+        }
+
+        .time-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: block;
+            color: var(--primary-color);
+        }
+
+        .time-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        /* --- STYL NOTATNIKA (MODAL) --- */
+        .modal-overlay {
+            display: none; /* Domyślnie ukryty */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .notebook {
+            background: white;
+            width: 90%;
+            max-width: 500px;
+            height: 70vh;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+            animation: slideUp 0.3s ease;
+        }
+
+        .notebook-header {
+            background: var(--primary-color);
+            padding: 10px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f0f0f0;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            background: var(--tab-inactive);
+            cursor: pointer;
+            font-weight: bold;
+            color: var(--text-color);
+            transition: 0.3s;
+        }
+
+        .tab-btn.active {
+            background: white;
+            border-top: 3px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .tab-content {
+            display: none;
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 1rem;
+            resize: none;
+            box-sizing: border-box;
+            background-color: #fffdfd;
+            background-image: linear-gradient(#eee .1em, transparent .1em);
+            background-size: 100% 1.5em;
+            line-height: 1.5em;
+        }
+
+        /* Przyciski */
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.3s;
+            box-shadow: 0 5px 15px rgba(255, 77, 109, 0.4);
+            margin: 10px;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            background-color: #d90429;
+        }
+
+        .heart-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            animation: beat 1s infinite alternate;
+        }
+
+        @keyframes beat { to { transform: scale(1.1); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+    </style>
+</head>
+<body>
+
+    <div class="heart-bg"></div>
+
+    <div class="container">
+        <div class="heart-icon">❤️</div>
+        <h1>Dla Ciebie, Magda!</h1>
+        
+        <p>Jesteśmy razem już:</p>
+        
+        <div class="timer-container">
+            <div class="time-box">
+                <span class="time-value" id="days">0</span>
+                <span class="time-label">Dni</span>
+            </div>
+            <div class="time-box">
+                <span class="time-value" id="hours">0</span>
+                <span class="time-label">Godz.</span>
+            </div>
+            <div class="time-box">
+                <span class="time-value" id="minutes">0</span>
+                <span class="time-label">Min</span>
+            </div>
+            <div class="time-box">
+                <span class="time-value" id="seconds">0</span>
+                <span class="time-label">Sek</span>
+            </div>
+        </div>
+
+        <p>Każda sekunda z Tobą jest wyjątkowa.</p>
+
+        <button class="btn" onclick="openNotebook()">📖 Nasz Notatnik</button>
+        </div>
+
+    <div id="notebookModal" class="modal-overlay">
+        <div class="notebook">
+            <div class="notebook-header">
+                <button class="close-btn" onclick="closeNotebook()">×</button>
+            </div>
+            <div class="tabs">
+                <button class="tab-btn active" onclick="openTab(event, 'Prezenty')">🎁 Prezenty (Moje)</button>
+                <button class="tab-btn" onclick="openTab(event, 'Plany')">🎁 Prezenty (Twoje)</button>
+                <button class="tab-btn" onclick="openTab(event, 'Wspomnienia')">💭 Myśli</button>
+            </div>
+            
+            <div id="Prezenty" class="tab-content active">
+                <textarea id="note-prezenty" placeholder="Tutaj wpisz pomysły na prezenty..."></textarea>
+            </div>
+
+            <div id="Plany" class="tab-content">
+                <textarea id="note-plany" placeholder="Tutaj wpisz pomysły na prezenty..."></textarea>
+            </div>
+
+            <div id="Wspomnienia" class="tab-content">
+                <textarea id="note-wspomnienia" placeholder="Najpiękniejsze wspólne chwile..."></textarea>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const startDate = new Date('2023-11-21T00:00:00'); 
+
+        function updateTimer() {
+            const now = new Date();
+            const diff = now - startDate;
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const minutes = Math.floor((diff / 1000 / 60) % 60);
+            const seconds = Math.floor((diff / 1000) % 60);
+
+            document.getElementById('days').innerText = days;
+            document.getElementById('hours').innerText = hours;
+            document.getElementById('minutes').innerText = minutes;
+            document.getElementById('seconds').innerText = seconds;
+        }
+
+        setInterval(updateTimer, 1000); // Odświeżaj co sekundę
+        updateTimer(); // Uruchom raz od razu
+
+        /* --- SKRYPT: NOTATNIK --- */
+
+        const modal = document.getElementById('notebookModal');
+
+        function openNotebook() {
+            modal.style.display = 'flex';
+        }
+
+        function closeNotebook() {
+            modal.style.display = 'none';
+        }
+
+        // Zamykanie po kliknięciu poza notatnikiem
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                closeNotebook();
+            }
+        }
+
+        // Obsługa zakładek
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            
+            // Ukryj wszystkie treści
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+                tabcontent[i].classList.remove('active');
+            }
+            
+            // Usuń klasę active z przycisków
+            tablinks = document.getElementsByClassName("tab-btn");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+            
+            // Pokaż wybraną zakładkę
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.classList.add("active");
+        }
+
+        /* --- SKRYPT: ZAPISYWANIE NOTATEK (LOCAL STORAGE) --- */
+        // Dzięki temu dane nie znikną po odświeżeniu strony!
+
+        const textAreas = ['note-prezenty', 'note-plany', 'note-wspomnienia'];
+
+        // Wczytaj dane przy starcie
+        textAreas.forEach(id => {
+            const saved = localStorage.getItem(id);
+            if (saved) document.getElementById(id).value = saved;
+            
+            // Zapisz przy każdej zmianie
+            document.getElementById(id).addEventListener('input', function() {
+                localStorage.setItem(id, this.value);
+            });
+        });
+
+    </script>
+</body>
+</html>
